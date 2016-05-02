@@ -75,9 +75,25 @@ class Oauth2IT extends AbstractIT {
      * @see <a href="https://github.com/stormpath/stormpath-framework-tck/issues/15">#15</a>
      */
     @Test(groups=["v100", "json"])
-    public void oauthErrorsOnInvalidRequestBody() throws Exception {
+    public void oauthErrorsOnJsonRequestBody() throws Exception {
         given()
-            .body("""hello"" : ""world""")
+            .contentType(ContentType.JSON)
+            .body([ "hello": "world" ])
+        .when()
+            .post(OauthRoute)
+        .then()
+            .statusCode(400)
+            .contentType(ContentType.JSON)
+            .body("error", is("invalid_request"))
+    }
+
+    /** POST must include form parameters
+     * @see <a href="https://github.com/stormpath/stormpath-framework-tck/issues/15">#15</a>
+     */
+    @Test(groups=["v100", "json"])
+    public void oauthErrorsOnEmptyRequestBody() throws Exception {
+        given()
+            .body()
         .when()
             .post(OauthRoute)
         .then()
