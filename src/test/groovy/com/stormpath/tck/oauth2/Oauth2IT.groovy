@@ -225,6 +225,8 @@ class Oauth2IT extends AbstractIT {
         .then()
             .statusCode(400)
             .contentType(ContentType.JSON)
+            .header("Cache-Control", containsString("no-store"))
+            .header("Pragma", is("no-cache"))
             .body("size()", is(2))
             .body("message", not(isEmptyOrNullString()))
             .body("error", not(isEmptyOrNullString()))
